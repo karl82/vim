@@ -37,6 +37,8 @@ syntax on
 set nocompatible
 set backspace=indent,eol,start
 
+execute pathogen#infect()
+
 set nu
 set wmw=0
 set wmh=0
