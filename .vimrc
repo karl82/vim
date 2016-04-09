@@ -1,10 +1,37 @@
+syntax on
+
 "=====[ Enable Nmap command for documented mappings ]================
 
 runtime plugin/documap.vim
 
+
+"====[ Edit and auto-update this config file and plugins ]==========
+
+augroup VimReload
+    autocmd!
+    autocmd BufWritePost $MYVIMRC source $MYVIMRC
+augroup END
+
+Nmap <silent>  ;v   [Edit .vimrc]          :next $MYVIMRC<CR>
+Nmap           ;vv  [Edit .vim/plugin/...] :next ~/.vim/plugin/
+
 "=====[ Edit files in local bin directory ]========
 
 Nmap ;b  [Edit ~/bin/...]  :next ~/bin/
+
+"====[ Use persistent undo ]=================
+
+if has('persistent_undo')
+    " Save all undo files in a single location (less messy, more risky)...
+    set undodir=$HOME/.vim_undo_files
+
+    " Save a lot of back-history...
+    set undolevels=5000
+
+    " Actually switch on persistent undo
+    set undofile
+
+endif
 
 "====[ I'm sick of typing :%s/.../.../g ]=======
 
@@ -14,6 +41,19 @@ vmap S                         :Blockwise s//g<LEFT><LEFT>
 Nmap <expr> M  [Shortcut for :s/<last match>//g]  ':%s/' . @/ .  '//g<LEFT><LEFT>'
 vmap <expr> M                                     ':s/' . @/ .  '//g<LEFT><LEFT>'
 
+"====[ Toggle visibility of naughty characters ]============
+
+" Make naughty characters visible...
+" (uBB is right double angle, uB7 is middle dot)
+exec "set lcs=tab:\uBB\uBB,trail:\uB7,nbsp:~"
+
+"====[ Set up smarter search behaviour ]=======================
+
+set incsearch       "Lookahead as search pattern is specified
+set ignorecase      "Ignore case in all searches...
+set smartcase       "...unless uppercase letters used
+
+set hlsearch        "Highlight all matches
 "Delete in normal mode to switch off highlighting till next search and clear messages...
 Nmap <silent> <BS> [Cancel highlighting]  :call HLNextOff() <BAR> :nohlsearch <BAR> :call VG_Show_CursorColumn('off')<CR>
 
@@ -26,14 +66,59 @@ function! TrimTrailingWS ()
     endif
 endfunction
 
-Nmap <silent> ;y [Toggle syntax highlighting]
-                 \ : if exists("syntax_on") <BAR>
-                 \    syntax off <BAR>
-                 \ else <BAR>
-                 \    syntax enable <BAR>
-                 \ endif<CR>
+"=====[ Make Visual modes work better ]==================
 
-syntax on
+" Visual Block mode is far more useful that Visual mode (so swap the commands)...
+nnoremap v <C-V>
+nnoremap <C-V> v
+
+vnoremap v <C-V>
+vnoremap <C-V> v
+
+"Square up visual selections...
+set virtualedit=block
+
+" Make BS/DEL work as expected in visual modes (i.e. delete the selected text)...
+vmap <BS> x
+
+"=====[ Configure % key (via matchit plugin) ]==============================
+
+" Match angle brackets...
+set matchpairs+=<:>
+
+" Match double-angles, XML tags and Perl keywords...
+let TO = ':'
+let OR = ','
+let b:match_words =
+\
+\                          '<<' .TO. '>>'
+\
+\.OR.     '<\@<=\(\w\+\)[^>]*>' .TO. '<\@<=/\1>'
+
+set wildmode=list:longest,full      "Show list of completions
+                                    "  and complete as much as possible,
+                                    "  then iterate full completions
+
+set infercase                       "Adjust completions to match case
+
+set noshowmode                      "Suppress mode change messages
+
+set updatecount=10                  "Save buffer every 10 chars typed
+
+set scrolloff=2                     "Scroll when 2 lines from top/bottom
+
+" Use space to jump down a page (like browsers do)...
+nnoremap   <Space> <PageDown>
+vnoremap   <Space> <PageDown>
+
+" Indent/outdent current block...
+nmap %% $>i}``
+nmap $$ $<i}``
+
+" Move to prev/next
+nmap <silent> <UP>            :prev<CR>
+nmap <silent> <DOWN>          :next<CR>
+
 set nocompatible
 set backspace=indent,eol,start
 
@@ -57,71 +142,21 @@ set sw=4
 set ts=4
 
 set history=400
-"set ruler
+set ruler
 set showcmd
-set cul
+
+" show line and column highlated
+set cursorcolumn
+set cursorline
+" highlight everything over 80columns
+call matchadd('ColorColumn', '==81v', 100)
 
 set ls=2
 set statusline=%<%f\ %y%h%m%r
 set statusline+=%{fugitive#statusline()}
 set statusline+=%=%-14.(%l,%c%V%)\ %P
 
-set hlsearch incsearch smartcase
 filetype plugin indent on
-
-" disable hls on backspace
-nmap <silent> <BS>  :nohlsearch<CR>
-
-" swap Visual and Block Visual
-nnoremap v <C-V>
-nnoremap <C-V> v
-
-vnoremap v <C-V>
-vnoremap <C-V> v
-
-" use arrows to move between files
-nmap <silent> <UP>            :prev<CR>
-nmap <silent> <DOWN>          :next<CR>
-
-" Use space to jump down a page (like browsers do)...
-nnoremap   <Space> <PageDown>
-vnoremap   <Space> <PageDown>
-
-" Indent/outdent current block...
-nmap %% $>i}``
-nmap $$ $<i}``
-
-set spelllang=en_us
-
-Nmap <silent> ;ss [Toggle Basic English spell-checking] :set    spell spelllang=en-basic<CR>
-
-" Make naughty characters visible...
-" (uBB is right double angle, uB7 is middle dot)
-exec "set lcs=tab:\uBB\uBB,trail:\uB7,nbsp:~"
-
-augroup VisibleNaughtiness
-    autocmd!
-    autocmd BufEnter  *       set list
-    autocmd BufEnter  *.txt   set nolist
-    autocmd BufEnter  *.vp*   set nolist
-    autocmd BufEnter  *       if !&modifiable
-    autocmd BufEnter  *           set nolist
-    autocmd BufEnter  *       endif
-augroup END
-
-" Match angle brackets...
-set matchpairs+=<:>
-
-" Match double-angles, XML tags and Perl keywords...
-let TO = ':'
-let OR = ','
-let b:match_words =
-\
-\                          '<<' .TO. '>>'
-\
-\.OR.     '<\@<=\(\w\+\)[^>]*>' .TO. '<\@<=/\1>'
-
-set scrolloff=2
 
 set showmatch
 set mat=6
@@ -139,16 +174,6 @@ filetype plugin on
 " upload/edit vimrc
 nmap <silent>  ;v  :next $MYVIMRC<CR>
 
-augroup VimReload
-    autocmd!
-    autocmd BufWritePost  $MYVIMRC  source $MYVIMRC
-augroup END
-
-if has('persistent_undo')
-    set undolevels=5000
-    set undodir=$HOME/.vim_undo_files
-    set undofile
-endif
 
 " save swap every 10 characters
 set updatecount=10
