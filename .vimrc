@@ -111,6 +111,15 @@ set scrolloff=2                     "Scroll when 2 lines from top/bottom
 nnoremap   <Space> <PageDown>
 vnoremap   <Space> <PageDown>
 
+" do SQL formatting
+let g:sqlutil_load_default_maps = 0
+
+vmap <silent> sf        <plug>SQLU_Formatter<CR>
+nmap <silent> scl       <Plug>SQLU_CreateColumnList<CR>
+nmap <silent> scd       <Plug>SQLU_GetColumnDef<CR>
+nmap <silent> scdt      <Plug>SQLU_GetColumnDataType<CR>
+nmap <silent> scp       <Plug>SQLU_CreateProcedure<CR>
+
 " Indent/outdent current block...
 nmap %% $>i}``
 nmap $$ $<i}``
