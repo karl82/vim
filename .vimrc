@@ -106,6 +106,7 @@ set noshowmode                      "Suppress mode change messages
 set updatecount=10                  "Save buffer every 10 chars typed
 
 set scrolloff=2                     "Scroll when 2 lines from top/bottom
+set sidescrolloff=2                  "Scroll when 2 columns from left/right
 
 " Use space to jump down a page (like browsers do)...
 nnoremap   <Space> <PageDown>
