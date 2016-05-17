@@ -55,7 +55,7 @@ set smartcase       "...unless uppercase letters used
 
 set hlsearch        "Highlight all matches
 "Delete in normal mode to switch off highlighting till next search and clear messages...
-Nmap <silent> <BS> [Cancel highlighting]  :call HLNextOff() <BAR> :nohlsearch <BAR> :call VG_Show_CursorColumn('off')<CR>
+Nmap <silent> <BS> [Cancel highlighting]  :nohlsearch <CR>
 
 "Double-delete to remove trailing whitespace...
 Nmap <silent> <BS><BS>  [Remove trailing whitespace] mz:call TrimTrailingWS()<CR>`z
