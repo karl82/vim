@@ -12,12 +12,12 @@ augroup VimReload
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
 augroup END
 
-Nmap <silent>  ;v   [Edit .vimrc]          :next $MYVIMRC<CR>
-Nmap           ;vv  [Edit .vim/plugin/...] :next ~/.vim/plugin/
+Nmap <silent>  ;v   [Edit .vimrc]          :new $MYVIMRC<CR>
+Nmap           ;vv  [Edit .vim/plugin/...] :new ~/.vim/plugin/
 
 "=====[ Edit files in local bin directory ]========
 
-Nmap ;b  [Edit ~/bin/...]  :next ~/bin/
+Nmap ;b  [Edit ~/bin/...]  :new ~/bin/
 
 "====[ Use persistent undo ]=================
 
@@ -180,10 +180,6 @@ set diffopt+=iwhite
 set background=dark
 
 filetype plugin on
-
-" upload/edit vimrc
-nmap <silent>  ;v  :next $MYVIMRC<CR>
-
 
 " save swap every 10 characters
 set updatecount=10
