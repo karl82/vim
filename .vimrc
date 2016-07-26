@@ -10,9 +10,11 @@ runtime plugin/documap.vim
 augroup VimReload
     autocmd!
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
+    autocmd BufWritePost $MYGVIMRC source $MYGVIMRC
 augroup END
 
 Nmap <silent>  ;v   [Edit .vimrc]          :new $MYVIMRC<CR>
+Nmap <silent>  ;gv  [Edit .vimrc]          :new $MYGVIMRC<CR>
 Nmap           ;vv  [Edit .vim/plugin/...] :new ~/.vim/plugin/
 
 "=====[ Edit files in local bin directory ]========
