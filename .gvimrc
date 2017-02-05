@@ -1,4 +1,4 @@
-colorscheme darkblue
+colorscheme macvim
 
 set macligatures
-set guifont=Fira\ Code\ Retina:h12
+set guifont=Fira\ Code\ Retina:h16
